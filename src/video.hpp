@@ -21,6 +21,7 @@ extern "C" {
 #include "libavfilter/avfilter.h"
 #include "libswscale/swscale.h"
 #include "libavutil/dict.h"
+
 }
 
 #define VIDEO_ITERATION_MOD 0

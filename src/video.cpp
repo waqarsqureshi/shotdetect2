@@ -21,6 +21,10 @@ extern "C" {
 #include "video.hpp"
 #include "logger.hpp"
 
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
+#define av_frame_alloc  avcodec_alloc_frame
+#endif
+
 int Video::str2int(const char *s) {
   int len = strlen(s);
   int result = 0;
@@ -249,8 +253,10 @@ bool Video::GetNextFrame() {
   } else {
     /* The last packet decoded does not contain pts, use stream time base to
      * increase it. */
-    currentTimeStamp = pFrame->best_effort_timestamp *
-                       av_q2d(pFormatCtx->streams[videoStream]->time_base);
+     //av_frame_get_best_effort_timestamp(frame) // ( This is edited by Waqar Shahid)
+       currentTimeStamp = pFrame->pts * //pFrame->best_effort_timestamp  *
+                          av_q2d(pFormatCtx->streams[videoStream]->time_base);
+                      
   }
   return true;
 }
